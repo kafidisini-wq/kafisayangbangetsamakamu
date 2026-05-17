@@ -19,29 +19,38 @@
             padding: 0;
         }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--pink-bg);
-            color: var(--text-color);
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
             overflow: hidden;
-            height: 100vh;
+            background-color: var(--pink-bg);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
         }
 
-        /* --- HALAMAN 1: WELCOME (PAS DI TENGAH) --- */
+        /* --- HALAMAN 1: WELCOME (FIXED DI TENGAH) --- */
         #halaman-welcome {
-            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 25px;
+            gap: 20px;
             z-index: 10;
-            height: 100%;
-            width: 100%;
+            padding: 20px;
+            text-align: center;
         }
 
         #halaman-welcome h1 {
@@ -49,9 +58,10 @@
             color: var(--pink-dark);
             animation: pulse 2s infinite;
             font-weight: 600;
+            margin-bottom: 5px;
         }
 
-        .btn-start {
+        .btn-start, .btn-pilihan {
             background-color: var(--pink-main);
             color: white;
             border: none;
@@ -64,7 +74,7 @@
             transition: transform 0.2s, background-color 0.2s;
         }
 
-        .btn-start:active {
+        .btn-start:active, .btn-pilihan:active {
             transform: scale(0.95);
             background-color: var(--pink-dark);
         }
@@ -114,10 +124,75 @@
             z-index: 16;
         }
 
-        /* --- HALAMAN 3: LOADING THEME LOVE (PAS DI TENGAH) --- */
+        /* --- DIALOG POPUP PILIHAN (PAS SELESAI GAME) --- */
+        .modal-pilihan {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(243, 247, 255, 0.95);
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            padding: 20px;
+        }
+
+        .pilihan-content {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            max-width: 400px;
+            width: 100%;
+            border: 2px solid var(--pink-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .pilihan-content h3 {
+            font-size: 1.3rem;
+            color: var(--pink-dark);
+            font-weight: 600;
+        }
+
+        .wrapper-tombol {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn-engga {
+            background-color: #b0c4de;
+            box-shadow: 0 5px 15px rgba(176, 196, 222, 0.4);
+        }
+
+        /* Kelinci Nangis via CSS Art & Emoji Bergerak */
+        .bunny-container {
+            font-size: 4.5rem;
+            position: relative;
+            height: 90px;
+            display: none; /* Muncul pas klik engga */
+            animation: shake 0.5s infinite alternate;
+        }
+        .bunny-tears {
+            position: absolute;
+            font-size: 1.5rem;
+            top: 40px;
+            animation: tear-fall 0.8s infinite linear;
+        }
+        .tear-left { left: -5px; }
+        .tear-right { right: -5px; }
+
+        /* --- HALAMAN 3: LOADING THEME LOVE --- */
         #halaman-loading {
             display: none;
-            text-align: center;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             z-index: 10;
             width: 85%;
             max-width: 400px;
@@ -128,6 +203,7 @@
             font-size: 1.1rem;
             margin-bottom: 20px;
             color: var(--pink-dark);
+            text-align: center;
         }
 
         .loading-love-wrapper {
@@ -258,9 +334,8 @@
         .text-red { color: #c44768; }
         .text-blue { color: #437694; display: none; }
 
-        /* CONTROLLER TOMBOL MUSIK */
+        /* TOMBOL MUSIK */
         #music-control {
-            display: none;
             position: fixed;
             top: 20px;
             right: 20px;
@@ -269,13 +344,14 @@
             background: white;
             border: 2px solid var(--pink-main);
             border-radius: 50%;
-            display: none; /* muncul di hal utama */
+            display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             font-size: 1.4rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             z-index: 110;
+            animation: pulse 2s infinite;
         }
 
         /* Popup Surat Dialog */
@@ -340,6 +416,14 @@
             0% { transform: translate(0, 0) scale(1); opacity: 1; }
             100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
         }
+        @keyframes shake {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+        @keyframes tear-fall {
+            0% { top: 40px; opacity: 1; }
+            100% { top: 80px; opacity: 0; }
+        }
 
         /* Responsive HP */
         @media (max-width: 768px) {
@@ -349,19 +433,34 @@
         }
     </style>
 </head>
-<body>
+<body onclick="bukaWebMuterLagu()">
 
     <audio id="bg-music" src="lagu_kita.mp3" loop></audio>
 
-    <div id="music-control" onclick="toggleMusic()">🎵</div>
+    <div id="music-control" onclick="toggleMusic(event)">🎵</div>
 
     <div id="halaman-welcome">
         <h1>hi salshabila sayang ❤️</h1>
-        <button class="btn-start" onclick="mulaiGame()">start with love</button>
+        <button class="btn-start" onclick="mulaiGame(event)">start with love</button>
     </div>
 
     <div id="halaman-game">
         <div id="counter-game">mengumpulkan hati: <span id="score-text">0</span>/15</div>
+    </div>
+
+    <div class="modal-pilihan" id="modalPilihan">
+        <div class="pilihan-content">
+            <div id="bunny-sad" class="bunny-container">
+                🐰
+                <div class="bunny-tears tear-left">💧</div>
+                <div class="bunny-tears tear-right">💧</div>
+            </div>
+            <h3 id="teks-pilihan">lanjut kehalaman selanjutnya?</h3>
+            <div class="wrapper-tombol">
+                <button class="btn-pilihan" onclick="pilihMau(event)">mau</button>
+                <button class="btn-pilihan btn-engga" id="tombol-engga" onclick="pilihEngga(event)">engga</button>
+            </div>
+        </div>
     </div>
 
     <div id="halaman-loading">
@@ -417,10 +516,21 @@
         let skorHati = 0;
         let gameInterval;
         let suratTerbukaSekarang = 1;
+        let laguSudahMuter = false;
         const music = document.getElementById('bg-music');
         const musicBtn = document.getElementById('music-control');
 
-        function mulaiGame() {
+        function bukaWebMuterLagu() {
+            if (!laguSudahMuter) {
+                music.play().then(() => {
+                    laguSudahMuter = true;
+                }).catch(err => console.log("Menunggu interaksi user untuk musik"));
+            }
+        }
+
+        function mulaiGame(e) {
+            e.stopPropagation();
+            bukaWebMuterLagu();
             document.getElementById('halaman-welcome').style.display = 'none';
             document.getElementById('halaman-game').style.display = 'block';
             gameInterval = setInterval(buatHatiJatuh, 600);
@@ -435,14 +545,13 @@
             
             const ukuranAcak = Math.floor(Math.random() * 30) + 25;
             love.style.fontSize = ukuranAcak + 'px';
-            
             const randomX = Math.random() * (window.innerWidth - 60);
             love.style.left = randomX + 'px';
-            
             const durasiJatuh = Math.random() * 1.5 + 1.5; 
             love.style.animationDuration = durasiJatuh + 's';
 
             love.onclick = function(e) {
+                e.stopPropagation();
                 skorHati++;
                 document.getElementById('score-text').innerText = skorHati;
                 buatEfekLedakan(e.clientX, e.clientY);
@@ -450,15 +559,12 @@
 
                 if (skorHati >= 15) {
                     clearInterval(gameInterval);
-                    pindahKeLoading();
+                    munculkanPilihan();
                 }
             };
 
             document.getElementById('halaman-game').appendChild(love);
-
-            setTimeout(() => {
-                love.remove();
-            }, durasiJatuh * 1000);
+            setTimeout(() => { love.remove(); }, durasiJatuh * 1000);
         }
 
         function buatEfekLedakan(x, y) {
@@ -467,24 +573,38 @@
                 const p = document.createElement('div');
                 p.classList.add('particle');
                 p.innerHTML = Math.random() > 0.5 ? '🌸' : '❤️';
-                p.style.left = x + 'px';
-                p.style.top = y + 'px';
-                
+                p.style.left = x + 'px'; p.style.top = y + 'px';
                 const arahX = (Math.random() - 0.5) * 150;
                 const arahY = (Math.random() - 0.5) * 150;
                 p.style.setProperty('--x', arahX + 'px');
+                p.style.setProperty('--properties--y', arahY + 'px');
                 p.style.setProperty('--y', arahY + 'px');
-                
                 document.body.appendChild(p);
-                
                 setTimeout(() => { p.remove(); }, 600);
             }
         }
 
-        function pindahKeLoading() {
+        function munculkanPilihan() {
             document.getElementById('halaman-game').style.display = 'none';
-            document.getElementById('halaman-loading').style.display = 'block';
+            document.getElementById('modalPilihan').style.display = 'flex';
+        }
 
+        function pilihEngga(e) {
+            e.stopPropagation();
+            // Gimmick kelinci nangis & teks berubah sedih sesuai request bos
+            document.getElementById('bunny-sad').style.display = 'block';
+            document.getElementById('teks-pilihan').innerHTML = 'kamu ga sayang aku yaa? 🥺🥹';
+            document.getElementById('tombol-engga').style.display = 'none'; // Sembunyiin tombol engga
+        }
+
+        function pilihMau(e) {
+            e.stopPropagation();
+            document.getElementById('modalPilihan').style.display = 'none';
+            pindahKeLoading();
+        }
+
+        function pindahKeLoading() {
+            document.getElementById('halaman-loading').style.display = 'flex'; 
             setTimeout(() => {
                 document.getElementById('loading-bar').style.width = '100%';
             }, 50);
@@ -493,54 +613,17 @@
                 document.getElementById('halaman-loading').style.display = 'none';
                 const halUtama = document.getElementById('halaman-utama');
                 halUtama.style.display = window.innerWidth <= 768 ? 'flex' : 'grid';
-                
-                // Munculin tombol kontrol musik & putar lagunya otomatis
-                musicBtn.style.display = 'flex';
-                putarLaguOtomatis();
             }, 3100);
         }
 
-        function putarLaguOtomatis() {
-            music.play().catch(error => {
-                console.log("Browser memblokir autoplay, musik bisa dinyalakan lewat tombol.");
-            });
-        }
-
-        function toggleMusic() {
+        function toggleMusic(e) {
+            e.stopPropagation();
             if (music.paused) {
                 music.play();
                 musicBtn.innerText = '🎵';
                 musicBtn.style.animation = 'pulse 2s infinite';
+                laguSudahMuter = true;
             } else {
                 music.pause();
                 musicBtn.innerText = '🔇';
-                musicBtn.style.animation = 'none';
-            }
-        }
-
-        function bukaSurat(nomor) {
-            suratTerbukaSekarang = nomor;
-            const modal = document.getElementById('modalSurat');
-            const teksPesan = document.getElementById('isiSuratTeks');
-
-            if (nomor === 1) {
-                teksPesan.innerText = isiSurat1;
-            } else if (nomor === 2) {
-                teksPesan.innerText = isiSurat2;
-            }
-
-            modal.style.display = 'flex';
-        }
-
-        function tutupSurat() {
-            document.getElementById('modalSurat').style.display = 'none';
-
-            if (suratTerbukaSekarang === 1) {
-                document.getElementById('tombol-surat2').style.display = 'flex';
-                document.getElementById('env-blue-render').style.display = 'flex';
-                document.getElementById('text-blue-render').style.display = 'block';
-            }
-        }
-    </script>
-</body>
-</html>
+  
