@@ -51,7 +51,7 @@
             z-index: 10;
         }
 
-        /* --- HALAMAN 0: GERBANG PIN (MUNCUL PERTAMA) --- */
+        /* --- HALAMAN 0: GERBANG PIN IPHONE STYLE --- */
         #halaman-pin {
             display: flex;
             z-index: 25;
@@ -59,33 +59,77 @@
         }
 
         #halaman-pin h2 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: var(--pink-dark);
             font-weight: 600;
             margin-bottom: 5px;
         }
 
-        .input-pin-box {
-            width: 200px;
-            padding: 12px;
-            border: 2px solid var(--pink-main);
-            border-radius: 20px;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            letter-spacing: 3px;
-            color: var(--pink-dark);
-            outline: none;
-            background: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        /* Indikator Titik PIN */
+        .pin-dots-container {
+            display: flex;
+            gap: 12px;
+            margin: 15px 0;
         }
+
+        .pin-dot {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--pink-main);
+            border-radius: 50%;
+            transition: background-color 0.15s;
+        }
+
+        .pin-dot.filled {
+            background-color: var(--pink-main);
+        }
+
+        /* Keypad Angka ala iPhone */
+        .iphone-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+            max-width: 260px;
+        }
+
+        .keypad-btn {
+            width: 65px;
+            height: 65px;
+            border: 2px solid var(--pink-main);
+            border-radius: 50%;
+            background: white;
+            color: var(--pink-dark);
+            font-size: 1.6rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.1s, color 0.1s;
+        }
+
+        .keypad-btn:active {
+            background-color: var(--pink-main);
+            color: white;
+        }
+
+        .keypad-btn.btn-action {
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+        }
+        .keypad-btn.btn-action:active { background: transparent; color: var(--pink-dark); }
 
         .error-pin-msg {
             color: #d14343;
             font-size: 0.95rem;
             font-weight: 600;
-            margin-top: 5px;
-            display: none; /* muncul kalau salah */
+            margin-top: 15px;
+            min-height: 22px;
+            opacity: 0;
+            transition: opacity 0.2s;
         }
 
         /* --- HALAMAN 1: WELCOME --- */
@@ -454,6 +498,11 @@
             0% { transform: rotate(-5deg); }
             100% { transform: rotate(5deg); }
         }
+        @keyframes iphone-shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
         @keyframes tear-fall {
             0% { top: 40px; opacity: 1; }
             100% { top: 80px; opacity: 0; }
@@ -476,7 +525,32 @@
     <div class="main-container">
         <div id="halaman-pin" class="section-page">
             <h2>masukkan kode rahasia ❤️</h2>
-            <input type="number" id="inputPinField" class="input-pin-box" placeholder="••••••••" oninput="cekPinOtomatis(this)">
+            
+            <div class="pin-dots-container" id="dotsWrapper">
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+            </div>
+
+            <div class="iphone-keypad">
+                <div class="keypad-btn" onclick="tekanAngka(1)">1</div>
+                <div class="keypad-btn" onclick="tekanAngka(2)">2</div>
+                <div class="keypad-btn" onclick="tekanAngka(3)">3</div>
+                <div class="keypad-btn" onclick="tekanAngka(4)">4</div>
+                <div class="keypad-btn" onclick="tekanAngka(5)">5</div>
+                <div class="keypad-btn" onclick="tekanAngka(6)">6</div>
+                <div class="keypad-btn" onclick="tekanAngka(7)">7</div>
+                <div class="keypad-btn" onclick="tekanAngka(8)">8</div>
+                <div class="keypad-btn" onclick="tekanAngka(9)">9</div>
+                <div class="keypad-btn btn-action"></div> <div class="keypad-btn" onclick="tekanAngka(0)">0</div>
+                <div class="keypad-btn btn-action" onclick="hapusAngka()" style="color: var(--pink-dark); font-weight: bold;">Hapus</div>
+            </div>
+
             <div id="pin-error-text" class="error-pin-msg">coba tanggal jadian kita 🥺</div>
         </div>
 
@@ -552,18 +626,20 @@
     </div>
 
     <script>
-        const isiSurat1 = `sayang salshabilaikuuu, i know you love me more than anything, you do you love me, and you know i love you the most. 
+        const isiSurat1 = `sayang salshabilakuuu, i know you love me more than anything, you do you love me, and you know i love you the most. 
 
 maaf akhir akhir ini kafi jadi terlalu bergantung sama kamu, kamu mungkin risih hate sama aku, aku merasa bersalah karena kafi seenaknya, besar kepala dan banyak sekali gerakan nya hehe, kafi haus perhatian kamu, kafi mau kamu liat semua tentang kafi.
 
-dan kurasa itu semua kurang benar dan annoying teruntuk kamu, even you bilang tidak pun pasti didalam hati iya itu sangat menjengkelkan HAHAHA. kafi minta maaf ya sayang kafi banyak tingkahnya, kafi merasa kafi dianggap seperti anak kecil bagimu hehe thats what make me like this.
+dan kurasa itu semua kurang benar dan annoying teruntuk kamu, even you billing tidak pun pasti didalam hati iya itu sangat menjengkelkan HAHAHA. kafi minta maaf ya sayang kafi banyak tingkahnya, kafi merasa kafi dianggap seperti anak kecil bagimu hehe thats what make me like this.
 
 kafi mau jadi diri kafi sendiri, jika kamu suruh kafi buat berhenti karena kamu terganggu tentang hal itu, aku akan berhenti. i love you mosttt sayang ❤️`;
 
-        const isiSurat2 = `sayanggg kafi ga larang kamu buat kamu punya waktu sendiri atau apa, setidaknya billing dulu ke kafi mau apa yaaa, kafi tidak akan larang kamu. 
+        const isiSurat2 = `sayanggg kafi ga larang kamu buat kamu punya waktu sendiri atau apa, setidaknya bilang dulu ke kafi mau apa yaaa, kafi tidak akan larang kamu. 
 
 kafi khawatir kannn kalo kamu kenapa kenapa dan kafi tidak tau, aku gamau lagi seperti itu sayang hehe 🥰`;
 
+        let pinInputSekarang = "";
+        const pinBenar = "18042025";
         let skorHati = 0;
         let gameInterval;
         let suratTerbukaSekarang = 1;
@@ -575,35 +651,66 @@ kafi khawatir kannn kalo kamu kenapa kenapa dan kafi tidak tau, aku gamau lagi s
             if (!laguSudahMuter) {
                 music.play().then(() => {
                     laguSudahMuter = true;
-                }).catch(err => console.log("Menunggu interaksi awal"));
+                }).catch(err => console.log("Autoplay ditahan"));
             }
         }
 
-        // FITUR BARU: Fungsi validasi pin 8 digit otomatis pas diketik di HP
-        function cekPinOtomatis(input) {
-            const pinBenar = "18042025";
-            const errorText = document.getElementById('pin-error-text');
+        // Fungsi klik tombol angka ala iPhone
+        function tekanAngka(angka) {
+            if (pinInputSekarang.length >= 8) return;
             
-            // Cek kalau digitnya udah lengkap 8 angka baru divalidasi
-            if (input.value.length === 8) {
-                if (input.value === pinBenar) {
-                    errorText.style.display = 'none';
-                    // Sembunyikan halaman gerbang pin, tampilkan welcome page
-                    document.getElementById('halaman-pin').style.display = 'none';
-                    document.getElementById('halaman-welcome').style.display = 'flex';
-                    
-                    // Putar musik otomatis begitu pin berhasil dijebol
-                    music.play().then(() => { laguSudahMuter = true; }).catch(e => console.log(e));
+            pinInputSekarang += angka;
+            updateDotsPin();
+
+            // Pas digit ke-8 diketik langsung validasi
+            if (pinInputSekarang.length === 8) {
+                setTimeout(validasiPinIphone, 200);
+            }
+        }
+
+        function hapusAngka() {
+            if (pinInputSekarang.length > 0) {
+                pinInputSekarang = pinInputSekarang.slice(0, -1);
+                updateDotsPin();
+            }
+        }
+
+        function updateDotsPin() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, index) => {
+                if (index < pinInputSekarang.length) {
+                    dot.classList.add('filled');
                 } else {
-                    errorText.style.display = 'block'; // Muncul peringatan sedih jadian
-                    input.value = ""; // Bersihkan kolom biar ketik ulang
+                    dot.classList.remove('filled');
                 }
+            });
+        }
+
+        function validasiPinIphone() {
+            const errorText = document.getElementById('pin-error-text');
+            const dotsWrapper = document.getElementById('dotsWrapper');
+
+            if (pinInputSekarang === pinBenar) {
+                errorText.style.opacity = "0";
+                document.getElementById('halaman-pin').style.display = 'none';
+                document.getElementById('halaman-welcome').style.display = 'flex';
+                music.play().then(() => { laguSudahMuter = true; }).catch(e => console.log(e));
+            } else {
+                // Efek getar merah ala iPhone salah pin
+                dotsWrapper.style.animation = "iphone-shake 0.4s ease-in-out";
+                errorText.style.opacity = "1"; // Muncul tulisan coba tanggal jadian
+                
+                setTimeout(() => {
+                    dotsWrapper.style.animation = "";
+                    pinInputSekarang = "";
+                    updateDotsPin();
+                }, 400);
             }
         }
 
         function mulaiGame(e) {
             e.stopPropagation();
-            music.play().catch(err => console.log("Music blocked: ", err));
+            music.play().catch(err => console.log(err));
             document.getElementById('halaman-welcome').style.display = 'none';
             document.getElementById('halaman-game').style.display = 'flex'; 
             gameInterval = setInterval(buatHatiJatuh, 600);
@@ -715,5 +822,3 @@ kafi khawatir kannn kalo kamu kenapa kenapa dan kafi tidak tau, aku gamau lagi s
     </script>
 </body>
 </html>
-
-        
