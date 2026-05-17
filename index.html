@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Untuk Salshabila Sayang</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --pink-bg: #f3f7ff;
@@ -28,16 +28,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        /* --- HALAMAN 1: WELCOME --- */
+        /* --- HALAMAN 1: WELCOME (PAS DI TENGAH) --- */
         #halaman-welcome {
             text-align: center;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
             z-index: 10;
+            height: 100%;
+            width: 100%;
         }
 
         #halaman-welcome h1 {
@@ -80,7 +84,7 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             padding: 10px 20px;
             border-radius: 20px;
             font-weight: bold;
@@ -88,28 +92,74 @@
             border: 2px solid var(--pink-main);
             z-index: 20;
             pointer-events: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         .falling-love {
             position: absolute;
-            font-size: 40px;
             cursor: pointer;
             user-select: none;
             animation: fall linear forwards;
             z-index: 15;
+            transition: transform 0.1s;
+        }
+        
+        .falling-love:active { transform: scale(1.3); }
+
+        .particle {
+            position: absolute;
+            font-size: 14px;
+            pointer-events: none;
+            animation: burst 0.6s ease-out forwards;
+            z-index: 16;
         }
 
-        /* --- HALAMAN 3: LOADING --- */
+        /* --- HALAMAN 3: LOADING THEME LOVE (PAS DI TENGAH) --- */
         #halaman-loading {
             display: none;
             text-align: center;
             z-index: 10;
+            width: 85%;
+            max-width: 400px;
         }
 
-        .heart-loader {
-            font-size: 5rem;
-            animation: beat 1s infinite alternate;
-            margin-bottom: 15px;
+        #halaman-loading h2 {
+            font-weight: 400;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--pink-dark);
+        }
+
+        .loading-love-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .loading-heart-icon {
+            font-size: 1.8rem;
+            animation: beat 0.6s infinite alternate;
+        }
+
+        .progress-bar-container {
+            flex-grow: 1;
+            height: 26px;
+            background-color: #fff;
+            border: 3px solid var(--pink-main);
+            border-radius: 15px;
+            padding: 3px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--pink-main), var(--pink-dark));
+            border-radius: 10px;
+            transition: width 3s linear;
         }
 
         /* --- HALAMAN 4: UTAMA (Sesuai Screenshot) --- */
@@ -159,10 +209,10 @@
         }
 
         .polaroid-caption {
-            font-size: 1.3rem;
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
             margin-top: 15px;
             color: var(--pink-dark);
-            font-weight: 600;
         }
 
         /* Bagian Surat di Kanan */
@@ -182,7 +232,6 @@
 
         .envelope-box:active { transform: scale(0.98); }
 
-        /* Desain Amplop Pixel manual pake CSS */
         .pixel-envelope {
             width: 80px;
             height: 55px;
@@ -209,12 +258,32 @@
         .text-red { color: #c44768; }
         .text-blue { color: #437694; display: none; }
 
+        /* CONTROLLER TOMBOL MUSIK */
+        #music-control {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: 2px solid var(--pink-main);
+            border-radius: 50%;
+            display: none; /* muncul di hal utama */
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 110;
+        }
+
         /* Popup Surat Dialog */
         .modal-surat {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.4);
             justify-content: center;
             align-items: center;
             z-index: 100;
@@ -222,54 +291,54 @@
         }
 
         .modal-content {
-            background: #fff;
-            padding: 20px;
+            background: #fffdf9;
+            padding: 30px;
             border-radius: 20px;
             max-width: 450px;
             width: 100%;
             border: 2px dashed var(--pink-main);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             position: relative;
-            max-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Pengaturan gambar tulisan tangan */
-        .img-tulisan-tangan {
-            width: 100%;
-            height: auto;
-            max-height: 60vh;
-            object-fit: contain;
-            border-radius: 10px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            max-height: 80vh;
             overflow-y: auto;
         }
 
+        .modal-content p {
+            font-family: 'Caveat', cursive;
+            font-size: 1.6rem;
+            line-height: 1.6;
+            color: #444;
+            white-space: pre-line;
+            text-align: left;
+        }
+
         .btn-close-modal {
-            margin-top: 15px;
+            margin-top: 20px;
             background: var(--pink-main);
             color: white;
             border: none;
-            padding: 10px 25px;
+            padding: 8px 20px;
             border-radius: 15px;
             cursor: pointer;
             font-weight: bold;
-            width: 100%;
+            float: right;
         }
 
         /* --- ANIMASI --- */
         @keyframes fall {
             0% { top: -10%; transform: translateX(0) rotate(0deg); }
-            100% { top: 105%; transform: translateX(50px) rotate(360deg); }
+            100% { top: 105%; transform: translateX(30px) rotate(360deg); }
         }
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
         @keyframes beat {
-            to { transform: scale(1.2); }
+            to { transform: scale(1.25); }
+        }
+        @keyframes burst {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
         }
 
         /* Responsive HP */
@@ -282,6 +351,10 @@
 </head>
 <body>
 
+    <audio id="bg-music" src="lagu_kita.mp3" loop></audio>
+
+    <div id="music-control" onclick="toggleMusic()">🎵</div>
+
     <div id="halaman-welcome">
         <h1>hi salshabila sayang ❤️</h1>
         <button class="btn-start" onclick="mulaiGame()">start with love</button>
@@ -292,8 +365,14 @@
     </div>
 
     <div id="halaman-loading">
-        <div class="heart-loader">❤️</div>
-        <h2 style="font-weight: 400;">kafi bawa kehalaman selanjutnya...</h2>
+        <h2>kafi bawa kehalaman selanjutnya...</h2>
+        <div class="loading-love-wrapper">
+            <div class="loading-heart-icon">❤️</div>
+            <div class="progress-bar-container">
+                <div id="loading-bar" class="progress-bar-fill"></div>
+            </div>
+            <div class="loading-heart-icon">❤️</div>
+        </div>
     </div>
 
     <div id="halaman-utama">
@@ -303,7 +382,7 @@
         <div class="polaroid-frame">
             <div class="pin-bow">🎀</div>
             <img src="sasha.jpg" alt="Foto Bersama Salshabila" onerror="this.src='https://picsum.photos/400/500'">
-            <div class="polaroid-caption">my valentine &lt;3</div>
+            <div class="polaroid-caption">my love, my future wife &lt;3</div>
         </div>
 
         <div class="surat-container">
@@ -325,20 +404,26 @@
 
     <div class="modal-surat" id="modalSurat">
         <div class="modal-content">
-            <img src="" id="imgSuratTeks" class="img-tulisan-tangan" alt="Surat Tulisan Tangan">
+            <p id="isiSuratTeks"></p>
             <button class="btn-close-modal" onclick="tutupSurat()">Tutup</button>
         </div>
     </div>
 
     <script>
+        // TEMPATIN TULISAN LO DI SINI NANTI BOS:
+        const isiSurat1 = `[Menunggu teks dari lo...]`;
+        const isiSurat2 = `[Menunggu teks dari lo...]`;
+
         let skorHati = 0;
         let gameInterval;
         let suratTerbukaSekarang = 1;
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-control');
 
         function mulaiGame() {
             document.getElementById('halaman-welcome').style.display = 'none';
             document.getElementById('halaman-game').style.display = 'block';
-            gameInterval = setInterval(buatHatiJatuh, 800);
+            gameInterval = setInterval(buatHatiJatuh, 600);
         }
 
         function buatHatiJatuh() {
@@ -348,15 +433,19 @@
             love.classList.add('falling-love');
             love.innerHTML = '❤️';
             
+            const ukuranAcak = Math.floor(Math.random() * 30) + 25;
+            love.style.fontSize = ukuranAcak + 'px';
+            
             const randomX = Math.random() * (window.innerWidth - 60);
             love.style.left = randomX + 'px';
             
-            const durasiJatuh = Math.random() * 2 + 2;
+            const durasiJatuh = Math.random() * 1.5 + 1.5; 
             love.style.animationDuration = durasiJatuh + 's';
 
-            love.onclick = function() {
+            love.onclick = function(e) {
                 skorHati++;
                 document.getElementById('score-text').innerText = skorHati;
+                buatEfekLedakan(e.clientX, e.clientY);
                 love.remove();
 
                 if (skorHati >= 15) {
@@ -372,27 +461,72 @@
             }, durasiJatuh * 1000);
         }
 
+        function buatEfekLedakan(x, y) {
+            const jumlahPartikel = 6;
+            for (let i = 0; i < jumlahPartikel; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                p.innerHTML = Math.random() > 0.5 ? '🌸' : '❤️';
+                p.style.left = x + 'px';
+                p.style.top = y + 'px';
+                
+                const arahX = (Math.random() - 0.5) * 150;
+                const arahY = (Math.random() - 0.5) * 150;
+                p.style.setProperty('--x', arahX + 'px');
+                p.style.setProperty('--y', arahY + 'px');
+                
+                document.body.appendChild(p);
+                
+                setTimeout(() => { p.remove(); }, 600);
+            }
+        }
+
         function pindahKeLoading() {
             document.getElementById('halaman-game').style.display = 'none';
             document.getElementById('halaman-loading').style.display = 'block';
 
             setTimeout(() => {
+                document.getElementById('loading-bar').style.width = '100%';
+            }, 50);
+
+            setTimeout(() => {
                 document.getElementById('halaman-loading').style.display = 'none';
                 const halUtama = document.getElementById('halaman-utama');
                 halUtama.style.display = window.innerWidth <= 768 ? 'flex' : 'grid';
-            }, 3000);
+                
+                // Munculin tombol kontrol musik & putar lagunya otomatis
+                musicBtn.style.display = 'flex';
+                putarLaguOtomatis();
+            }, 3100);
+        }
+
+        function putarLaguOtomatis() {
+            music.play().catch(error => {
+                console.log("Browser memblokir autoplay, musik bisa dinyalakan lewat tombol.");
+            });
+        }
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicBtn.innerText = '🎵';
+                musicBtn.style.animation = 'pulse 2s infinite';
+            } else {
+                music.pause();
+                musicBtn.innerText = '🔇';
+                musicBtn.style.animation = 'none';
+            }
         }
 
         function bukaSurat(nomor) {
             suratTerbukaSekarang = nomor;
             const modal = document.getElementById('modalSurat');
-            const imgSurat = document.getElementById('imgSuratTeks');
+            const teksPesan = document.getElementById('isiSuratTeks');
 
-            // Logika ganti gambar berdasarkan tombol surat yang diklik
             if (nomor === 1) {
-                imgSurat.src = 'surat1.jpg';
+                teksPesan.innerText = isiSurat1;
             } else if (nomor === 2) {
-                imgSurat.src = 'surat2.jpg';
+                teksPesan.innerText = isiSurat2;
             }
 
             modal.style.display = 'flex';
@@ -409,5 +543,4 @@
         }
     </script>
 </body>
-  </html>
-
+</html>
