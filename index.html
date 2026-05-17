@@ -51,8 +51,45 @@
             z-index: 10;
         }
 
-        #halaman-welcome {
+        /* --- HALAMAN 0: GERBANG PIN (MUNCUL PERTAMA) --- */
+        #halaman-pin {
             display: flex;
+            z-index: 25;
+            gap: 15px;
+        }
+
+        #halaman-pin h2 {
+            font-size: 1.5rem;
+            color: var(--pink-dark);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .input-pin-box {
+            width: 200px;
+            padding: 12px;
+            border: 2px solid var(--pink-main);
+            border-radius: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: var(--pink-dark);
+            outline: none;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .error-pin-msg {
+            color: #d14343;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 5px;
+            display: none; /* muncul kalau salah */
+        }
+
+        /* --- HALAMAN 1: WELCOME --- */
+        #halaman-welcome {
             z-index: 20;
             gap: 20px;
         }
@@ -437,6 +474,12 @@
     <div id="music-control" onclick="toggleMusic(event)">🎵</div>
 
     <div class="main-container">
+        <div id="halaman-pin" class="section-page">
+            <h2>masukkan kode rahasia ❤️</h2>
+            <input type="number" id="inputPinField" class="input-pin-box" placeholder="••••••••" oninput="cekPinOtomatis(this)">
+            <div id="pin-error-text" class="error-pin-msg">coba tanggal jadian kita 🥺</div>
+        </div>
+
         <div id="halaman-welcome" class="section-page">
             <h1>hi salshabila sayang ❤️</h1>
             <button class="btn-start" onclick="mulaiGame(event)">start with love</button>
@@ -509,8 +552,7 @@
     </div>
 
     <script>
-        // LONG TEXT LO UDAH GW PASANG RAPI DI SINI BOS:
-        const isiSurat1 = `sayang salshabilakuuu, i know you love me more than anything, you do you love me, and you know i love you the most. 
+        const isiSurat1 = `sayang salshabilaikuuu, i know you love me more than anything, you do you love me, and you know i love you the most. 
 
 maaf akhir akhir ini kafi jadi terlalu bergantung sama kamu, kamu mungkin risih hate sama aku, aku merasa bersalah karena kafi seenaknya, besar kepala dan banyak sekali gerakan nya hehe, kafi haus perhatian kamu, kafi mau kamu liat semua tentang kafi.
 
@@ -518,7 +560,7 @@ dan kurasa itu semua kurang benar dan annoying teruntuk kamu, even you bilang ti
 
 kafi mau jadi diri kafi sendiri, jika kamu suruh kafi buat berhenti karena kamu terganggu tentang hal itu, aku akan berhenti. i love you mosttt sayang ❤️`;
 
-        const isiSurat2 = `sayanggg kafi ga larang kamu buat kamu punya waktu sendiri atau apa, setidaknya bilang dulu ke kafi mau apa yaaa, kafi tidak akan larang kamu. 
+        const isiSurat2 = `sayanggg kafi ga larang kamu buat kamu punya waktu sendiri atau apa, setidaknya billing dulu ke kafi mau apa yaaa, kafi tidak akan larang kamu. 
 
 kafi khawatir kannn kalo kamu kenapa kenapa dan kafi tidak tau, aku gamau lagi seperti itu sayang hehe 🥰`;
 
@@ -534,6 +576,28 @@ kafi khawatir kannn kalo kamu kenapa kenapa dan kafi tidak tau, aku gamau lagi s
                 music.play().then(() => {
                     laguSudahMuter = true;
                 }).catch(err => console.log("Menunggu interaksi awal"));
+            }
+        }
+
+        // FITUR BARU: Fungsi validasi pin 8 digit otomatis pas diketik di HP
+        function cekPinOtomatis(input) {
+            const pinBenar = "18042025";
+            const errorText = document.getElementById('pin-error-text');
+            
+            // Cek kalau digitnya udah lengkap 8 angka baru divalidasi
+            if (input.value.length === 8) {
+                if (input.value === pinBenar) {
+                    errorText.style.display = 'none';
+                    // Sembunyikan halaman gerbang pin, tampilkan welcome page
+                    document.getElementById('halaman-pin').style.display = 'none';
+                    document.getElementById('halaman-welcome').style.display = 'flex';
+                    
+                    // Putar musik otomatis begitu pin berhasil dijebol
+                    music.play().then(() => { laguSudahMuter = true; }).catch(e => console.log(e));
+                } else {
+                    errorText.style.display = 'block'; // Muncul peringatan sedih jadian
+                    input.value = ""; // Bersihkan kolom biar ketik ulang
+                }
             }
         }
 
@@ -651,3 +715,5 @@ kafi khawatir kannn kalo kamu kenapa kenapa dan kafi tidak tau, aku gamau lagi s
     </script>
 </body>
 </html>
+
+        
