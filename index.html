@@ -22,35 +22,40 @@
         html, body {
             height: 100%;
             width: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
             background-color: var(--pink-bg);
             font-family: 'Poppins', sans-serif;
+            overflow: hidden;
         }
 
-        body {
+        /* Container utama biar semua halaman stabil di tengah */
+        .main-container {
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
         }
 
-        /* --- HALAMAN 1: WELCOME (FIXED DI TENGAH) --- */
-        #halaman-welcome {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* Kunci utama anti-bug: Semua section diatur bersih murni dari tengah */
+        .section-page {
+            display: none;
             width: 100%;
             height: 100%;
-            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            z-index: 10;
             padding: 20px;
             text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* --- HALAMAN 1: WELCOME (FIXED TENGAH HP) --- */
+        #halaman-welcome {
+            display: flex; /* Halaman pertama langsung muncul */
+            gap: 20px;
         }
 
         #halaman-welcome h1 {
@@ -58,7 +63,6 @@
             color: var(--pink-dark);
             animation: pulse 2s infinite;
             font-weight: 600;
-            margin-bottom: 5px;
         }
 
         .btn-start, .btn-pilihan {
@@ -81,12 +85,7 @@
 
         /* --- HALAMAN 2: MINIGAME --- */
         #halaman-game {
-            display: none;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
+            /* display diatur via JS */
         }
 
         #counter-game {
@@ -170,12 +169,12 @@
             box-shadow: 0 5px 15px rgba(176, 196, 222, 0.4);
         }
 
-        /* Kelinci Nangis via CSS Art & Emoji Bergerak */
+        /* Kelinci Nangis */
         .bunny-container {
             font-size: 4.5rem;
             position: relative;
             height: 90px;
-            display: none; /* Muncul pas klik engga */
+            display: none;
             animation: shake 0.5s infinite alternate;
         }
         .bunny-tears {
@@ -189,13 +188,13 @@
 
         /* --- HALAMAN 3: LOADING THEME LOVE --- */
         #halaman-loading {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            width: 85%;
+            padding: 0 30px;
+        }
+
+        #halaman-loading .loading-box {
+            width: 100%;
             max-width: 400px;
+            text-align: center;
         }
 
         #halaman-loading h2 {
@@ -203,7 +202,6 @@
             font-size: 1.1rem;
             margin-bottom: 20px;
             color: var(--pink-dark);
-            text-align: center;
         }
 
         .loading-love-wrapper {
@@ -240,17 +238,20 @@
 
         /* --- HALAMAN 4: UTAMA (Sesuai Screenshot) --- */
         #halaman-utama {
-            display: none;
-            width: 90%;
-            max-width: 900px;
             background: white;
             border-radius: 24px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            width: 90%;
+            max-width: 900px;
+            height: auto;
+            min-height: 450px;
             position: relative;
+            display: none; /* muncul terakhir */
             grid-template-columns: 1.2fr 1fr;
             gap: 40px;
             align-items: center;
+            top: auto; left: auto; /* reset posisi absolute khusus halaman utama */
         }
 
         .decor-bow { position: absolute; font-size: 24px; opacity: 0.6; }
@@ -266,6 +267,7 @@
             border-radius: 4px;
             text-align: center;
             position: relative;
+            width: 100%;
         }
         
         .polaroid-frame .pin-bow {
@@ -296,6 +298,7 @@
             display: flex;
             flex-direction: column;
             gap: 25px;
+            width: 100%;
         }
 
         .envelope-box {
@@ -304,6 +307,7 @@
             gap: 15px;
             cursor: pointer;
             transition: transform 0.2s;
+            width: 100%;
         }
 
         .envelope-box:active { transform: scale(0.98); }
@@ -317,6 +321,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-shrink: 0;
         }
         .env-red { background-color: #f6d1ad; }
         .env-blue { background-color: #aed9e5; border-color: #5587a2; display: none; }
@@ -330,11 +335,12 @@
         .envelope-text {
             font-weight: 600;
             font-size: 1.1rem;
+            text-align: left;
         }
         .text-red { color: #c44768; }
         .text-blue { color: #437694; display: none; }
 
-        /* TOMBOL MUSIK */
+        /* TOMBOL MUSIK AESTHETIC */
         #music-control {
             position: fixed;
             top: 20px;
@@ -362,7 +368,7 @@
             background: rgba(0,0,0,0.4);
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 120;
             padding: 20px;
         }
 
@@ -427,9 +433,11 @@
 
         /* Responsive HP */
         @media (max-width: 768px) {
-            body { overflow-y: auto; height: auto; padding: 20px 0; }
-            #halaman-utama { grid-template-columns: 1fr; width: 95%; gap: 25px; padding: 20px;}
-            #halaman-game { position: fixed; }
+            body { overflow-y: auto; }
+            .main-container { height: auto; min-height: 100vh; padding: 20px 0; }
+            .section-page { position: relative; height: auto; min-height: 100vh; }
+            #halaman-utama { grid-template-columns: 1fr; width: 95%; gap: 25px; padding: 20px; }
+            #halaman-game { position: fixed; height: 100vh; }
         }
     </style>
 </head>
@@ -439,13 +447,57 @@
 
     <div id="music-control" onclick="toggleMusic(event)">🎵</div>
 
-    <div id="halaman-welcome">
-        <h1>hi salshabila sayang ❤️</h1>
-        <button class="btn-start" onclick="mulaiGame(event)">start with love</button>
-    </div>
+    <div class="main-container">
 
-    <div id="halaman-game">
-        <div id="counter-game">mengumpulkan hati: <span id="score-text">0</span>/15</div>
+        <div id="halaman-welcome" class="section-page">
+            <h1>hi salshabila sayang ❤️</h1>
+            <button class="btn-start" onclick="mulaiGame(event)">start with love</button>
+        </div>
+
+        <div id="halaman-game" class="section-page">
+            <div id="counter-game">mengumpulkan hati: <span id="score-text">0</span>/15</div>
+        </div>
+
+        <div id="halaman-loading" class="section-page">
+            <div class="loading-box">
+                <h2>kafi bawa kehalaman selanjutnya...</h2>
+                <div class="loading-love-wrapper">
+                    <div class="loading-heart-icon">❤️</div>
+                    <div class="progress-bar-container">
+                        <div id="loading-bar" class="progress-bar-fill"></div>
+                    </div>
+                    <div class="loading-heart-icon">❤️</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="halaman-utama">
+            <div class="decor-bow top-left">🎀</div>
+            <div class="decor-bow bottom-right">🎀</div>
+
+            <div class="polaroid-frame">
+                <div class="pin-bow">🎀</div>
+                <img src="sasha.jpg" alt="Foto Bersama Salshabila" onerror="this.src='https://picsum.photos/400/500'">
+                <div class="polaroid-caption">my love, my future wife &lt;3</div>
+            </div>
+
+            <div class="surat-container">
+                <div class="envelope-box" id="tombol-surat1" onclick="bukaSurat(1)">
+                    <div class="pixel-envelope env-red">
+                        <span class="pixel-heart">♥</span>
+                    </div>
+                    <div class="envelope-text text-red">Surat Untukmu</div>
+                </div>
+
+                <div class="envelope-box" id="tombol-surat2" onclick="bukaSurat(2)" style="display: none;">
+                    <div class="pixel-envelope env-blue" id="env-blue-render">
+                        <span class="pixel-heart">♥</span>
+                    </div>
+                    <div class="envelope-text text-blue" id="text-blue-render">Satu Lagi...</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="modal-pilihan" id="modalPilihan">
@@ -459,44 +511,6 @@
             <div class="wrapper-tombol">
                 <button class="btn-pilihan" onclick="pilihMau(event)">mau</button>
                 <button class="btn-pilihan btn-engga" id="tombol-engga" onclick="pilihEngga(event)">engga</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="halaman-loading">
-        <h2>kafi bawa kehalaman selanjutnya...</h2>
-        <div class="loading-love-wrapper">
-            <div class="loading-heart-icon">❤️</div>
-            <div class="progress-bar-container">
-                <div id="loading-bar" class="progress-bar-fill"></div>
-            </div>
-            <div class="loading-heart-icon">❤️</div>
-        </div>
-    </div>
-
-    <div id="halaman-utama">
-        <div class="decor-bow top-left">🎀</div>
-        <div class="decor-bow bottom-right">🎀</div>
-
-        <div class="polaroid-frame">
-            <div class="pin-bow">🎀</div>
-            <img src="sasha.jpg" alt="Foto Bersama Salshabila" onerror="this.src='https://picsum.photos/400/500'">
-            <div class="polaroid-caption">my love, my future wife &lt;3</div>
-        </div>
-
-        <div class="surat-container">
-            <div class="envelope-box" id="tombol-surat1" onclick="bukaSurat(1)">
-                <div class="pixel-envelope env-red">
-                    <span class="pixel-heart">♥</span>
-                </div>
-                <div class="envelope-text text-red">Surat Untukmu</div>
-            </div>
-
-            <div class="envelope-box" id="tombol-surat2" onclick="bukaSurat(2)" style="display: none;">
-                <div class="pixel-envelope env-blue" id="env-blue-render">
-                    <span class="pixel-heart">♥</span>
-                </div>
-                <div class="envelope-text text-blue" id="text-blue-render">Satu Lagi...</div>
             </div>
         </div>
     </div>
@@ -524,7 +538,7 @@
             if (!laguSudahMuter) {
                 music.play().then(() => {
                     laguSudahMuter = true;
-                }).catch(err => console.log("Menunggu interaksi user untuk musik"));
+                }).catch(err => console.log("Menunggu interaksi awal"));
             }
         }
 
@@ -532,7 +546,8 @@
             e.stopPropagation();
             bukaWebMuterLagu();
             document.getElementById('halaman-welcome').style.display = 'none';
-            document.getElementById('halaman-game').style.display = 'block';
+            // FIX: Diubah ke flex biar kontainer game muncul dengan struktur layout baru
+            document.getElementById('halaman-game').style.display = 'flex'; 
             gameInterval = setInterval(buatHatiJatuh, 600);
         }
 
@@ -577,7 +592,6 @@
                 const arahX = (Math.random() - 0.5) * 150;
                 const arahY = (Math.random() - 0.5) * 150;
                 p.style.setProperty('--x', arahX + 'px');
-                p.style.setProperty('--properties--y', arahY + 'px');
                 p.style.setProperty('--y', arahY + 'px');
                 document.body.appendChild(p);
                 setTimeout(() => { p.remove(); }, 600);
@@ -591,10 +605,9 @@
 
         function pilihEngga(e) {
             e.stopPropagation();
-            // Gimmick kelinci nangis & teks berubah sedih sesuai request bos
             document.getElementById('bunny-sad').style.display = 'block';
             document.getElementById('teks-pilihan').innerHTML = 'kamu ga sayang aku yaa? 🥺🥹';
-            document.getElementById('tombol-engga').style.display = 'none'; // Sembunyiin tombol engga
+            document.getElementById('tombol-engga').style.display = 'none';
         }
 
         function pilihMau(e) {
@@ -609,21 +622,4 @@
                 document.getElementById('loading-bar').style.width = '100%';
             }, 50);
 
-            setTimeout(() => {
-                document.getElementById('halaman-loading').style.display = 'none';
-                const halUtama = document.getElementById('halaman-utama');
-                halUtama.style.display = window.innerWidth <= 768 ? 'flex' : 'grid';
-            }, 3100);
-        }
-
-        function toggleMusic(e) {
-            e.stopPropagation();
-            if (music.paused) {
-                music.play();
-                musicBtn.innerText = '🎵';
-                musicBtn.style.animation = 'pulse 2s infinite';
-                laguSudahMuter = true;
-            } else {
-                music.pause();
-                musicBtn.innerText = '🔇';
-  
+ 
