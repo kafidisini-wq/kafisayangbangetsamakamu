@@ -27,7 +27,6 @@
             overflow: hidden;
         }
 
-        /* Container utama biar semua halaman stabil di tengah */
         .main-container {
             width: 100%;
             height: 100%;
@@ -37,7 +36,6 @@
             position: relative;
         }
 
-        /* Kunci utama anti-bug: Semua section diatur bersih murni dari tengah */
         .section-page {
             display: none;
             width: 100%;
@@ -50,11 +48,12 @@
             position: absolute;
             top: 0;
             left: 0;
+            z-index: 10;
         }
 
-        /* --- HALAMAN 1: WELCOME (FIXED TENGAH HP) --- */
         #halaman-welcome {
-            display: flex; /* Halaman pertama langsung muncul */
+            display: flex;
+            z-index: 20;
             gap: 20px;
         }
 
@@ -83,9 +82,8 @@
             background-color: var(--pink-dark);
         }
 
-        /* --- HALAMAN 2: MINIGAME --- */
         #halaman-game {
-            /* display diatur via JS */
+            z-index: 30;
         }
 
         #counter-game {
@@ -99,7 +97,7 @@
             font-weight: bold;
             font-size: 1.1rem;
             border: 2px solid var(--pink-main);
-            z-index: 20;
+            z-index: 40;
             pointer-events: none;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
@@ -109,7 +107,7 @@
             cursor: pointer;
             user-select: none;
             animation: fall linear forwards;
-            z-index: 15;
+            z-index: 35;
             transition: transform 0.1s;
         }
         
@@ -120,10 +118,9 @@
             font-size: 14px;
             pointer-events: none;
             animation: burst 0.6s ease-out forwards;
-            z-index: 16;
+            z-index: 36;
         }
 
-        /* --- DIALOG POPUP PILIHAN (PAS SELESAI GAME) --- */
         .modal-pilihan {
             display: none;
             position: fixed;
@@ -169,7 +166,6 @@
             box-shadow: 0 5px 15px rgba(176, 196, 222, 0.4);
         }
 
-        /* Kelinci Nangis */
         .bunny-container {
             font-size: 4.5rem;
             position: relative;
@@ -186,9 +182,9 @@
         .tear-left { left: -5px; }
         .tear-right { right: -5px; }
 
-        /* --- HALAMAN 3: LOADING THEME LOVE --- */
         #halaman-loading {
             padding: 0 30px;
+            z-index: 60;
         }
 
         #halaman-loading .loading-box {
@@ -236,7 +232,6 @@
             transition: width 3s linear;
         }
 
-        /* --- HALAMAN 4: UTAMA (Sesuai Screenshot) --- */
         #halaman-utama {
             background: white;
             border-radius: 24px;
@@ -247,18 +242,18 @@
             height: auto;
             min-height: 450px;
             position: relative;
-            display: none; /* muncul terakhir */
+            display: none; 
             grid-template-columns: 1.2fr 1fr;
             gap: 40px;
             align-items: center;
-            top: auto; left: auto; /* reset posisi absolute khusus halaman utama */
+            top: auto; left: auto;
+            z-index: 70;
         }
 
         .decor-bow { position: absolute; font-size: 24px; opacity: 0.6; }
         .top-left { top: 15px; left: 15px; }
         .bottom-right { bottom: 15px; right: 15px; }
 
-        /* Frame Polaroid */
         .polaroid-frame {
             background: white;
             padding: 15px 15px 35px 15px;
@@ -293,7 +288,6 @@
             color: var(--pink-dark);
         }
 
-        /* Bagian Surat di Kanan */
         .surat-container {
             display: flex;
             flex-direction: column;
@@ -340,7 +334,6 @@
         .text-red { color: #c44768; }
         .text-blue { color: #437694; display: none; }
 
-        /* TOMBOL MUSIK AESTHETIC */
         #music-control {
             position: fixed;
             top: 20px;
@@ -356,11 +349,10 @@
             cursor: pointer;
             font-size: 1.4rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            z-index: 110;
+            z-index: 150;
             animation: pulse 2s infinite;
         }
 
-        /* Popup Surat Dialog */
         .modal-surat {
             display: none;
             position: fixed;
@@ -368,7 +360,7 @@
             background: rgba(0,0,0,0.4);
             justify-content: center;
             align-items: center;
-            z-index: 120;
+            z-index: 160;
             padding: 20px;
         }
 
@@ -406,7 +398,6 @@
             float: right;
         }
 
-        /* --- ANIMASI --- */
         @keyframes fall {
             0% { top: -10%; transform: translateX(0) rotate(0deg); }
             100% { top: 105%; transform: translateX(30px) rotate(360deg); }
@@ -431,7 +422,6 @@
             100% { top: 80px; opacity: 0; }
         }
 
-        /* Responsive HP */
         @media (max-width: 768px) {
             body { overflow-y: auto; }
             .main-container { height: auto; min-height: 100vh; padding: 20px 0; }
@@ -444,11 +434,9 @@
 <body onclick="bukaWebMuterLagu()">
 
     <audio id="bg-music" src="lagu_kita.mp3" loop></audio>
-
     <div id="music-control" onclick="toggleMusic(event)">🎵</div>
 
     <div class="main-container">
-
         <div id="halaman-welcome" class="section-page">
             <h1>hi salshabila sayang ❤️</h1>
             <button class="btn-start" onclick="mulaiGame(event)">start with love</button>
@@ -470,8 +458,7 @@
                 </div>
             </div>
         </div>
-
-        <div id="halaman-utama">
+                <div id="halaman-utama">
             <div class="decor-bow top-left">🎀</div>
             <div class="decor-bow bottom-right">🎀</div>
 
@@ -497,7 +484,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="modal-pilihan" id="modalPilihan">
@@ -544,20 +530,17 @@
 
         function mulaiGame(e) {
             e.stopPropagation();
-            bukaWebMuterLagu();
+            music.play().catch(err => console.log("Music blocked: ", err));
             document.getElementById('halaman-welcome').style.display = 'none';
-            // FIX: Diubah ke flex biar kontainer game muncul dengan struktur layout baru
             document.getElementById('halaman-game').style.display = 'flex'; 
             gameInterval = setInterval(buatHatiJatuh, 600);
         }
 
         function buatHatiJatuh() {
             if (skorHati >= 15) return;
-
             const love = document.createElement('div');
             love.classList.add('falling-love');
             love.innerHTML = '❤️';
-            
             const ukuranAcak = Math.floor(Math.random() * 30) + 25;
             love.style.fontSize = ukuranAcak + 'px';
             const randomX = Math.random() * (window.innerWidth - 60);
@@ -571,13 +554,11 @@
                 document.getElementById('score-text').innerText = skorHati;
                 buatEfekLedakan(e.clientX, e.clientY);
                 love.remove();
-
                 if (skorHati >= 15) {
                     clearInterval(gameInterval);
                     munculkanPilihan();
                 }
             };
-
             document.getElementById('halaman-game').appendChild(love);
             setTimeout(() => { love.remove(); }, durasiJatuh * 1000);
         }
@@ -621,5 +602,43 @@
             setTimeout(() => {
                 document.getElementById('loading-bar').style.width = '100%';
             }, 50);
+            setTimeout(() => {
+                document.getElementById('halaman-loading').style.display = 'none';
+                const halUtama = document.getElementById('halaman-utama');
+                halUtama.style.display = window.innerWidth <= 768 ? 'flex' : 'grid';
+            }, 3100);
+        }
 
- 
+        function toggleMusic(e) {
+            e.stopPropagation();
+            if (music.paused) {
+                music.play();
+                musicBtn.innerText = '🎵';
+                musicBtn.style.animation = 'pulse 2s infinite';
+            } else {
+                music.pause();
+                musicBtn.innerText = '🔇';
+                musicBtn.style.animation = 'none';
+            }
+        }
+
+        function bukaSurat(nomor) {
+            suratTerbukaSekarang = nomor;
+            const modal = document.getElementById('modalSurat');
+            const teksPesan = document.getElementById('isiSuratTeks');
+            if (nomor === 1) teksPesan.innerText = isiSurat1;
+            else if (nomor === 2) teksPesan.innerText = isiSurat2;
+            modal.style.display = 'flex';
+        }
+
+        function tutupSurat() {
+            document.getElementById('modalSurat').style.display = 'none';
+            if (suratTerbukaSekarang === 1) {
+                document.getElementById('tombol-surat2').style.display = 'flex';
+                document.getElementById('env-blue-render').style.display = 'flex';
+                document.getElementById('text-blue-render').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
